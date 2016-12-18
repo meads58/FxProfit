@@ -12,7 +12,7 @@ class FxApi {
       .then(response => {
         return response.json()
       }).then(json => {
-        console.log(json.rates)
+        console.log("latest", json.rates)
       }).catch(ex => {
         console.log('parsing failed', ex)
       })
@@ -24,35 +24,36 @@ class FxApi {
       dateRangeArray.push(this._formateDate(i))
     }
     return dateRangeArray; 
-  }
+  };
 
   static _formateDate(relativeDays){
-    let fxDate = moment().subtract(relativeDays, 'days').calendar();
-    console.log("heeeee", fxDate)
-    let a =  moment(fxDate).format("MM.DD.YYYY");
-    console.log("haaaaaa", a)
+    return  moment().subtract(relativeDays, 'days').format("YYYY-MM-DD");
   };
 
   static getFxByLastDays(days){
-    let fxRange = []
+    let fxRange = [];
     const dateRangeArray = this._dateRangeList(days);
+    
+    dateRangeArray.map(fxDate => {  
+     this.getFxByDate(fxDate).then(json => {
+        fxRange.push({date : fxDate})
+      });    
+    });
+  };
 
-    //dateRangeArray.each(fxDate => {
-      //fxRange.push({fxDate: this.getFxByDate(fxDate)})
-    //});
-    console.log(dateRangeArray)
-  }
+ 
 
   static getFxByDate(date) {
-    fetch(FX_ON_DATE_URL + date + '.json?app_id=' + APP_ID)
+    return fetch(FX_ON_DATE_URL + date + '.json?app_id=' + APP_ID)
       .then(response => {
         return response.json()
       }).then(json => {
-        console.log(json.rates)
+        //console.log(json.rates)
+        return json.rates
       }).catch(ex => {
         console.log('parsing failed', ex)
       })
-  }
+  };
 };
 
 export default FxApi

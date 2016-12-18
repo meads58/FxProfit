@@ -5,5 +5,5 @@
       "presets": ["react-hmre"]
     }
  },
- "plugins": ["transform-react-jsx"]
+ "plugins": ["transform-react-jsx", "syntax-async-functions"]
 }
